@@ -25,7 +25,13 @@ pub struct FireblocksApiClient {
 }
 
 impl FireblocksApiClient {
-    pub fn new(provider: BaseApiTokenProvider, base_url: String) -> Self{
+    pub fn new(provider: BaseApiTokenProvider, base_url: Option<String>) -> Self{
+
+        let base_url = match base_url {
+            Some(url) => url,
+            None => "https://api.fireblocks.io".to_string()
+        };
+
         Self { api_token_provider: provider, base_url: base_url }
     }
 }
