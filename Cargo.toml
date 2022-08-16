@@ -14,6 +14,6 @@ sha2 = "0.10.2"
 hex = "*"
 hmac = "*"
 hyper = { version = "0.14", features = ["full"] }
-async-trait = "0.1.57"
+async-trait = "*"
 hyper-tls = "*"
 serde_json = "1.0.60"
