@@ -1,0 +1,19 @@
+[package]
+name = "fireblocks_sdk"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+tokio = { version = "*", features = ["full"] }
+jsonwebtoken = "8"
+serde = {version = "1.0", features = ["derive"] }
+uuid = {version = "1.1.2", features = ["v4"]}
+sha2 = "0.10.2"
+hex = "*"
+hmac = "*"
+hyper = { version = "0.14", features = ["full"] }
+async-trait = "0.1.57"
+hyper-tls = "*"
+serde_json = "1.0.60"
