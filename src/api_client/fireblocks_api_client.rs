@@ -19,6 +19,7 @@ pub trait FireblocsApiExecutor {
     async fn issue_delete_request<T: DeserializeOwned>(&self, path: &str) -> Result<T, Error>;
 }
 
+#[derive(Clone)]
 pub struct FireblocksApiClient {
     api_token_provider: BaseApiTokenProvider,
     base_url: String,

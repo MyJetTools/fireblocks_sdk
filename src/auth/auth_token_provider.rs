@@ -6,6 +6,7 @@ pub trait ApiTokenProvider {
     fn sign_jwt(&self, path: &str, body: Option<String>) -> String;
 }
 
+#[derive(Clone)]
 pub struct BaseApiTokenProvider{
     pub api_key: String,
     pub private_key: Vec<u8>,
