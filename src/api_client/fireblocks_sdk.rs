@@ -2,6 +2,7 @@ use crate::consts::{SUPPORTEDS_ASSETS, VAULT_ACCOUNTS, VAULT_ACCOUNTS_WITH_PAGE_
 
 use super::{FireblocsApiExecutor, FireblocksPageMode, AssetTypeResponse, VaultAccountResponse, PagedVaultAccountsResponse, AssetResponse, VaultAssetResponse, CreateVaultAccountRequest};
 
+#[derive(Clone)]
 pub struct FireblocksSdk<T: FireblocsApiExecutor>{
     api_client: T,
 }
