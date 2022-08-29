@@ -1,0 +1,61 @@
+{
+    "type": "TRANSACTION_STATUS_UPDATED",
+    "tenantId": "7ad49858-a20f-5c52-88f4-c1ad0ed8f503",
+    "timestamp": 1661421746652,
+    "data": {
+      "id": "c28bde1b-0cda-4d7e-aeba-65786681b334",
+      "createdAt": 1661421074062,
+      "lastUpdated": 1661421735760,
+      "assetId": "BTC_TEST",
+      "source": {
+        "id": "",
+        "type": "UNKNOWN",
+        "name": "External",
+        "subType": ""
+      },
+      "destination": {
+        "id": "9",
+        "type": "VAULT_ACCOUNT",
+        "name": "order-f258bdfc-938e-4205-986e-a721f671f005",
+        "subType": ""
+      },
+      "amount": 0.0011,
+      "networkFee": 0,
+      "netAmount": 0.0011,
+      "sourceAddress": "mi1ohL2Q92Qgb449LJrb8T6XK3o8m5bYV2",
+      "destinationAddress": "tb1qsptgs22sfkskzmrhr7vptumxt2j5tgnc6dgqt5",
+      "destinationAddressDescription": "",
+      "destinationTag": "",
+      "status": "COMPLETED",
+      "txHash": "07ef73d7c7f10339d845716557d5482db29e3093391875c12ed113d2fd416820",
+      "subStatus": "CONFIRMED",
+      "signedBy": [],
+      "createdBy": "",
+      "rejectedBy": "",
+      "amountUSD": 23.84,
+      "addressType": "",
+      "note": "",
+      "exchangeTxId": "",
+      "requestedAmount": 0.0011,
+      "feeCurrency": "BTC_TEST",
+      "operation": "TRANSFER",
+      "customerRefId": null,
+      "numOfConfirmations": 1,
+      "amountInfo": {
+        "amount": "0.0011",
+        "requestedAmount": "0.0011",
+        "netAmount": "0.0011",
+        "amountUSD": "23.84"
+      },
+      "feeInfo": {
+        "networkFee": "0"
+      },
+      "destinations": [],
+      "externalTxId": null,
+      "blockInfo": {
+        "blockHash": null
+      },
+      "signedMessages": [],
+      "index": 0
+    }
+  }
