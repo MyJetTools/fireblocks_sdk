@@ -78,7 +78,13 @@ impl FireblocsApiExecutor for FireblocksApiClient {
         let response = client.request(req).await?;
 
         let result = get_body(response).await;
-        Ok(serde_json::from_slice(&result[..]).unwrap())
+
+        let result =  match serde_json::from_slice(&result[..]) {
+            Ok(result) => result,
+            Err(err) => panic!("error serialize response body. {}, {}", err, String::from_utf8(result).unwrap()),
+        };
+
+        Ok(result)
     }
 
     async fn issue_put_request<T: DeserializeOwned>(&self, path: &str, body: Option<String>) -> Result<T, Error> {
@@ -99,7 +105,12 @@ impl FireblocsApiExecutor for FireblocksApiClient {
         let response = client.request(req).await?;
 
         let result = get_body(response).await;
-        Ok(serde_json::from_slice(&result[..]).unwrap())
+        let result =  match serde_json::from_slice(&result[..]) {
+            Ok(result) => result,
+            Err(err) => panic!("error serialize response body. {}, {}", err, String::from_utf8(result).unwrap()),
+        };
+
+        Ok(result)
     }
 
     async fn issue_delete_request<T: DeserializeOwned>(&self, path: &str) -> Result<T, Error> {
@@ -114,7 +125,12 @@ impl FireblocsApiExecutor for FireblocksApiClient {
         let response = client.request(req).await?;
 
         let result = get_body(response).await;
-        Ok(serde_json::from_slice(&result[..]).unwrap())
+        let result =  match serde_json::from_slice(&result[..]) {
+            Ok(result) => result,
+            Err(err) => panic!("error serialize response body. {}, {}", err, String::from_utf8(result).unwrap()),
+        };
+
+        Ok(result)
     }
 }
 
