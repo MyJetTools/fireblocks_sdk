@@ -1,4 +1,6 @@
-use std::str;
+use std::{str};
+use std::fmt;
+
 
 use serde::{Deserialize, Serialize};
 
@@ -143,6 +145,12 @@ pub enum FireblocksError{
     Unexpected(String),
     NetworkError(String),
     ResponseSerializeError(String),
+}
+
+impl fmt::Display for FireblocksError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "Fireblocks error. Error: {:?}", self)
+    }
 }
 
 impl FireblocksError {
