@@ -156,6 +156,7 @@ impl fmt::Display for FireblocksError {
 impl FireblocksError {
     pub fn serialize_error(body: Vec<u8>) -> FireblocksError{
         let result: Result<FireblocksErrorResponse, serde_json::Error> = serde_json::from_slice(&body[..]);
+        println!("Fireblocks error: {:?}", String::from_utf8(body).unwrap());
         let result = result.unwrap();
 
         match &result.code {
