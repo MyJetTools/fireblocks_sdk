@@ -144,7 +144,7 @@ pub enum FireblocksError{
     IdempotencyKeyInProgress(i32, String),
     Unexpected(String),
     NetworkError(String),
-    ResponseSerializeError(String),
+    ResponseSerializeError(String, String),
 }
 
 impl fmt::Display for FireblocksError {

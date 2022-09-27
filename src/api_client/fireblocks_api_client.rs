@@ -129,7 +129,7 @@ async fn process_fireblocks_response<T: DeserializeOwned>(response: Result<Respo
                 true => {
                     match serde_json::from_slice(&body[..]){
                         Ok(result) => Ok(result),
-                        Err(err) => Err(FireblocksError::ResponseSerializeError(err.to_string()))
+                        Err(err) => Err(FireblocksError::ResponseSerializeError(err.to_string(), String::from_utf8(body).unwrap()))
                     }
                 },
                 false => Err(FireblocksError::serialize_error(body)),
