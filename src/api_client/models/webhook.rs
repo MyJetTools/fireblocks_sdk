@@ -49,12 +49,6 @@ impl CallbackType{
             "NETWORK_CONNECTION_ADDED" => CallbackType::NetworkConnectionAdded,
             _ => Self::Other(fireblocks_base_data, data.to_string()),
         };
-
-        // println!("{}", callback_type);
-
-        // let callback_type = serde_json::from_str::<CallbackType>(&data).unwrap();
-        // let serialized = serde_json::to_string(&callback_type).unwrap();
-        // serialized
     }
 
 

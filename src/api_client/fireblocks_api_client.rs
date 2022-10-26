@@ -132,8 +132,6 @@ async fn process_fireblocks_response<T: DeserializeOwned>(response: Result<Respo
             }
                 
             let body = get_body(response).await;
-
-            println!("{}", String::from_utf8(body.clone()).unwrap());
             
             let result = match is_success{
                 true => {

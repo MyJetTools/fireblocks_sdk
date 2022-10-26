@@ -76,7 +76,6 @@ impl<T: FireblocsApiExecutor> FireblocksSdk<T> {
 
         let body = serde_json::to_string(&request).unwrap();
 
-        println!("{}", body);
         return self.api_client.issue_post_request(&format!("{}", TRANSACTIONS), Some(body), None).await;
     }
 }
