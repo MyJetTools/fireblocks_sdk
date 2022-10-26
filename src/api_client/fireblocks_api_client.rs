@@ -13,7 +13,7 @@ pub enum FireblocksPageMode {
 
 #[async_trait]
 pub trait FireblocsApiExecutor {
-    async fn issue_get_request<T: DeserializeOwned>(&self, path: &str, page_mode: FireblocksPageMode) -> Result<T, FireblocksError>;
+    async fn issue_get_request<T: DeserializeOwned>(&self, path: &str, page_mode: FireblocksPageMode) -> Result<Option<T>, FireblocksError>;
     async fn issue_post_request<T: DeserializeOwned>(&self, path: &str, body: Option<String>, idempotency_key: Option<String>) -> Result<T, FireblocksError>;
     async fn issue_put_request<T: DeserializeOwned>(&self, path: &str, body: Option<String>) -> Result<T, FireblocksError>;
     async fn issue_delete_request<T: DeserializeOwned>(&self, path: &str) -> Result<T, FireblocksError>;
@@ -39,7 +39,7 @@ impl FireblocksApiClient {
 
 #[async_trait]
 impl FireblocsApiExecutor for FireblocksApiClient {
-    async fn issue_get_request<T: DeserializeOwned>(&self, path: &str, _: FireblocksPageMode) -> Result<T, FireblocksError> {
+    async fn issue_get_request<T: DeserializeOwned>(&self, path: &str, _: FireblocksPageMode) -> Result<Option<T>, FireblocksError> {
         let req = Request::builder().method(Method::GET).uri(format!("{}{}", self.base_url, path.clone()))
             .header("X-API-Key", self.api_token_provider.get_api_key())
             .header("Authorization", format!("Bearer {}", self.api_token_provider.sign_jwt(path, None)));
@@ -48,7 +48,8 @@ impl FireblocsApiExecutor for FireblocksApiClient {
         let https = HttpsConnector::new();
         let client = Client::builder().build::<_, hyper::Body>(https);
         let response = client.request(req).await;
-        process_fireblocks_response(response).await
+        let result = process_fireblocks_response(response).await?;
+        return Ok(result)
     }
 
     async fn issue_post_request<T: DeserializeOwned>(&self, path: &str, body: Option<String>, idempotency_key: Option<String>) -> Result<T, FireblocksError> {
@@ -75,7 +76,8 @@ impl FireblocsApiExecutor for FireblocksApiClient {
         let client = Client::builder().build::<_, hyper::Body>(https);
         let response = client.request(req).await;
 
-        process_fireblocks_response(response).await
+        let result = process_fireblocks_response(response).await?;
+        return Ok(result.unwrap())
     }
 
     async fn issue_put_request<T: DeserializeOwned>(&self, path: &str, body: Option<String>) -> Result<T, FireblocksError> {
@@ -95,7 +97,8 @@ impl FireblocsApiExecutor for FireblocksApiClient {
         let client = Client::builder().build::<_, hyper::Body>(https);
         let response = client.request(req).await;
 
-        process_fireblocks_response(response).await
+        let result = process_fireblocks_response(response).await?;
+        return Ok(result.unwrap())
     }
 
     async fn issue_delete_request<T: DeserializeOwned>(&self, path: &str) -> Result<T, FireblocksError> {
@@ -109,7 +112,9 @@ impl FireblocsApiExecutor for FireblocksApiClient {
         let client = Client::builder().build::<_, hyper::Body>(https);
         let response = client.request(req).await;
 
-        process_fireblocks_response(response).await
+        let result = process_fireblocks_response(response).await?;
+        return Ok(result.unwrap())
+
     }
 }
 
@@ -119,10 +124,14 @@ async fn get_body(response: Response<Body>) -> Vec<u8> {
     full_body.iter().cloned().collect::<Vec<u8>>()
 }
 
-async fn process_fireblocks_response<T: DeserializeOwned>(response: Result<Response<Body>, Error>) -> Result<T, FireblocksError>{
+async fn process_fireblocks_response<T: DeserializeOwned>(response: Result<Response<Body>, Error>) -> Result<Option<T>, FireblocksError>{
     match response {
         Ok(response) => {
             let is_success = response.status().is_success();
+            if response.status().as_u16() == 404 {
+                return Ok(None)
+            }
+                
             let body = get_body(response).await;
             
             let result = match is_success{

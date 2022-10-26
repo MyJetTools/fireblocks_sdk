@@ -41,7 +41,7 @@ pub struct AssetResponse{
     #[serde(rename = "pendingRefundNetwork")]
     pub pending_refund_network: Option<String>,
     #[serde(rename = "blockHeight")]
-    pub block_height: String,
+    pub block_height: Option<String>,
     #[serde(rename = "blockHash")]
     pub block_hash: Option<String>,
 }
