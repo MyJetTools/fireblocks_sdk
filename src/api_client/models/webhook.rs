@@ -81,12 +81,12 @@ pub struct TransactionDetails{
     pub amount_info: AmountInfo,
     pub fee_info: FeeInfo,
     pub amount: f64,
-    pub net_amount: f64,
+    pub net_amount: Option<f64>,
     #[serde(rename = "amountUSD")]
     pub amount_usd: f64,
     pub service_fee: Option<f64>,
     pub treat_as_gross_amount: Option<bool>,
-    pub network_fee: f64,
+    pub network_fee: Option<f64>,
     pub created_at: u64,
     pub last_updated: u64,
     pub status: String,
@@ -107,7 +107,7 @@ pub struct TransactionDetails{
     pub operation: String,
     pub aml_screening_result: Option<AmlScreeningResult>,
     pub customer_ref_id: Option<String>,
-    pub num_of_confirmations: i32,
+    pub num_of_confirmations: Option<i32>,
     pub network_records: Option<Vec<NetworkRecord>>,
     pub replaced_tx_hash: Option<String>,
     pub external_tx_id: Option<String>,
@@ -200,9 +200,9 @@ pub struct NetworkRecord{
     pub source: TransferPeerPathResponse,
     pub destination: TransferPeerPathResponse,
     pub tx_hash: String,
-    pub network_fee: f64,
+    pub network_fee: Option<f64>,
     pub asset_id: String,
-    pub net_amount: f64,
+    pub net_amount: Option<f64>,
     pub status: String,
     #[serde(rename = "type")]
     pub record_type: String,
@@ -254,7 +254,7 @@ pub struct TransferPeerPathResponse{
 pub struct AmountInfo{
     pub amount: String,
     pub requested_amount: String,
-    pub net_amount: String,
+    pub net_amount: Option<String>,
     #[serde(rename = "amountUSD")]
     pub amount_usd: String,
 }
@@ -262,6 +262,6 @@ pub struct AmountInfo{
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct FeeInfo{
-    pub network_fee: String,
+    pub network_fee: Option<String>,
     pub service_fee: Option<String>,
 }
