@@ -29,6 +29,8 @@ pub fn generate_fireblocs_jwt_without_body(path: &str, api_key: String, pem: Vec
     return token_str.unwrap();
 }
 
+
+
 fn get_body_hash(body: String) -> String{
     let mut hasher = Sha256::new();
     hasher.update(body.clone());
