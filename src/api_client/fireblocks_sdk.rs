@@ -1,4 +1,4 @@
-use crate::{consts::{SUPPORTEDS_ASSETS, VAULT_ACCOUNTS, VAULT_ACCOUNTS_WITH_PAGE_INFO}, FireblocksError, EXTERNAL_WALLETS, ExternalWallet, CreateExternalWalletRequest, ExternalWalletAsset, CreateExternalWalletAssetRequest, CreateTransactionRequest, FireblocksSource, FireblocksDestination, CreateTransactionResponse, TRANSACTIONS, FireblocksTransactionFeeLevel};
+use crate::{consts::{SUPPORTEDS_ASSETS, VAULT_ACCOUNTS, VAULT_ACCOUNTS_WITH_PAGE_INFO}, FireblocksError, EXTERNAL_WALLETS, ExternalWallet, CreateExternalWalletRequest, ExternalWalletAsset, CreateExternalWalletAssetRequest, CreateTransactionRequest, FireblocksSource, FireblocksDestination, CreateTransactionResponse, TRANSACTIONS, FireblocksTransactionFeeLevel, VaultAccountAssetAddress};
 
 use super::{FireblocsApiExecutor, FireblocksPageMode, AssetTypeResponse, VaultAccountResponse, PagedVaultAccountsResponse, AssetResponse, VaultAssetResponse, CreateVaultAccountRequest};
 
@@ -46,6 +46,10 @@ impl<T: FireblocsApiExecutor> FireblocksSdk<T> {
 
     pub async fn refresh_vault_asset_balance(&self, vault_account_id: String, asset_id: String) ->  Result<Option<AssetResponse>, FireblocksError>{
         return self.api_client.issue_get_request(&format!("{}/{}/{}/balance", VAULT_ACCOUNTS, vault_account_id, asset_id), FireblocksPageMode::Disabled).await;
+    }
+
+    pub async fn get_vault_asset(&self, vault_account_id: String, asset_id: String) ->  Result<Option<Vec<VaultAccountAssetAddress>>, FireblocksError>{
+        return self.api_client.issue_get_request(&format!("{}/{}/{}/addresses", VAULT_ACCOUNTS, vault_account_id, asset_id), FireblocksPageMode::Disabled).await;
     }
 
     pub async fn create_vault_asset(&self, vault_account_id: String, asset_id: String) ->  Result<VaultAssetResponse, FireblocksError>{

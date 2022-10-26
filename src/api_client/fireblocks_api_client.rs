@@ -27,7 +27,6 @@ pub struct FireblocksApiClient {
 
 impl FireblocksApiClient {
     pub fn new(provider: BaseApiTokenProvider, base_url: Option<String>) -> Self{
-
         let base_url = match base_url {
             Some(url) => url,
             None => "https://api.fireblocks.io".to_string()
@@ -133,6 +132,8 @@ async fn process_fireblocks_response<T: DeserializeOwned>(response: Result<Respo
             }
                 
             let body = get_body(response).await;
+
+            println!("{}", String::from_utf8(body.clone()).unwrap());
             
             let result = match is_success{
                 true => {

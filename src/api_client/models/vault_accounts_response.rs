@@ -114,3 +114,21 @@ pub struct CreateVaultAccountRequest{
     #[serde(skip_serializing_if = "Option::is_none")]
     pub auto_fuel: Option<bool>,
 }
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct VaultAccountAssetAddress{
+    #[serde(rename = "assetId")]
+    pub asset_id: String,
+    pub address: String,
+    #[serde(rename = "legacyAddress")]
+    pub legacy_address: String,
+    pub description: String,
+    pub tag: String,
+    #[serde(rename = "type")]
+    pub asset_type: String,
+    pub change: Option<String>,
+    #[serde(rename = "customerRefId")]
+    pub customer_ref_id: Option<String>,
+    #[serde(rename = "bip44AddressIndex")]
+    pub bip44_address_index: i32,
+}
