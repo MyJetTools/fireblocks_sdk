@@ -1,4 +1,4 @@
-use crate::{consts::{SUPPORTEDS_ASSETS, VAULT_ACCOUNTS, VAULT_ACCOUNTS_WITH_PAGE_INFO}, FireblocksError, EXTERNAL_WALLETS, ExternalWallet, CreateExternalWalletRequest, ExternalWalletAsset, CreateExternalWalletAssetRequest};
+use crate::{consts::{SUPPORTEDS_ASSETS, VAULT_ACCOUNTS, VAULT_ACCOUNTS_WITH_PAGE_INFO}, FireblocksError, EXTERNAL_WALLETS, ExternalWallet, CreateExternalWalletRequest, ExternalWalletAsset, CreateExternalWalletAssetRequest, CreateTransactionRequest, FireblocksSource, FireblocksDestination, CreateTransactionResponse, TRANSACTIONS, FireblocksTransactionFeeLevel};
 
 use super::{FireblocsApiExecutor, FireblocksPageMode, AssetTypeResponse, VaultAccountResponse, PagedVaultAccountsResponse, AssetResponse, VaultAssetResponse, CreateVaultAccountRequest};
 
@@ -27,6 +27,7 @@ impl<T: FireblocsApiExecutor> FireblocksSdk<T> {
     pub async fn get_vault_account_asset(&self, vault_account_id: String, asset_id: String) ->  Result<AssetResponse, FireblocksError>{
         return self.api_client.issue_get_request(&format!("{}/{}/{}", VAULT_ACCOUNTS, vault_account_id, asset_id), FireblocksPageMode::Disabled).await;
     }
+
     pub async fn get_external_wallets(&self) -> Result<Vec<ExternalWallet>, FireblocksError>{
         return self.api_client.issue_get_request(&format!("{}", EXTERNAL_WALLETS), FireblocksPageMode::Disabled).await;
     }
@@ -55,6 +56,24 @@ impl<T: FireblocsApiExecutor> FireblocksSdk<T> {
         let request = CreateVaultAccountRequest{name, hidden_on_ui: hidden_on_ui, customer_ref_id, auto_fuel};
         let body = serde_json::to_string(&request).unwrap();
         return self.api_client.issue_post_request(&format!("{}", VAULT_ACCOUNTS), Some(body), idempotency_key).await;
+    }
+
+    pub async fn create_transaction(&self, asset_id: String, source: FireblocksSource, destination: FireblocksDestination, amount: f64, message: String, is_auto_gas: bool) -> Result<CreateTransactionResponse, FireblocksError>{
+        let request = CreateTransactionRequest{
+            asset_id,
+            source: source.into(),
+            destination: destination.into(),
+            amount: amount.to_string(),
+            note: message,
+            treat_as_gross_amount: is_auto_gas,
+            fail_on_low_fee: false,
+            fee_level: FireblocksTransactionFeeLevel::Medium,
+        };
+
+        let body = serde_json::to_string(&request).unwrap();
+
+        println!("{}", body);
+        return self.api_client.issue_post_request(&format!("{}", TRANSACTIONS), Some(body), None).await;
     }
 }
 
