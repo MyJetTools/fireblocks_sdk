@@ -1,4 +1,5 @@
 use serde::{Serialize, Deserialize};
+use serde_json::Value;
 
 #[derive(Debug)]
 pub enum CallbackType{
@@ -13,6 +14,43 @@ pub enum CallbackType{
     FiatAccountAdded,
     NetworkConnectionAdded,
     Other(FireblocksCallbackBaseData, String)
+}
+
+
+impl CallbackType{
+    pub async fn serialize(data: &str)-> Self{
+        let value: Value = serde_json::from_str(&data).unwrap();
+        let callback_type = value["type"].as_str().unwrap().to_owned();
+        let fireblocks_base_data = FireblocksCallbackBaseData{
+            tennant_id: value["tenantId"].as_str().unwrap().to_owned(),
+            timestamp: value["timestamp"].as_u64().unwrap(),
+        };
+
+        let data_value = value.get("data").unwrap();
+
+        return match callback_type.as_str(){
+            "TRANSACTION_CREATED" => {
+                let data: TransactionDetails = serde_json::from_value(data_value.clone()).unwrap();
+                CallbackType::TransactionCreated(fireblocks_base_data, data)
+            },
+            "TRANSACTION_STATUS_UPDATED" => {
+                let data: TransactionDetails = serde_json::from_value(data_value.clone()).unwrap();
+                CallbackType::TransactionStatusUpdate(fireblocks_base_data, data)
+            },
+            "TRANSACTION_APPROVAL_STATUS_UPDATED" => {
+                let data: TransactionDetails = serde_json::from_value(data_value.clone()).unwrap();
+                CallbackType::TransactionApprovalStatusUpdate(fireblocks_base_data, data)
+            },
+            "VAULT_ACCOUNT_ADDED" => CallbackType::VaultAccountAdded,
+            "VAULT_ACCOUNT_ASSET_ADDED" => CallbackType::VaultAccountAssetAdded,
+            "INTERNAL_WALLET_ASSET_ADDED" => CallbackType::InternalWalletAssetAdded,
+            "EXTERNAL_WALLET_ASSET_ADDED" => CallbackType::ExternalWalletAssetAdded,
+            "EXCHANGE_ACCOUNT_ADDED" => CallbackType::ExchangeAccountAdded,
+            "FIAT_ACCOUNT_ADDED" => CallbackType::FiatAccountAdded,
+            "NETWORK_CONNECTION_ADDED" => CallbackType::NetworkConnectionAdded,
+            _ => Self::Other(fireblocks_base_data, data.to_string()),
+        };
+    }
 }
 
 #[derive(Debug, Deserialize, Serialize)]

@@ -2,7 +2,8 @@ use std::collections::HashSet;
 
 use jsonwebtoken::{DecodingKey, Algorithm, Validation, errors::Error, EncodingKey, Header};
 
-use crate::{CoSignerCallback, CoSignerCallbackResponse};
+use super::{CoSignerCallback, CoSignerCallbackResponse};
+
 
 pub fn decrypt_co_signer_request(request: &str, public_key: Vec<u8>) -> Result<CoSignerCallback, Error>{
     let key = DecodingKey::from_rsa_pem(&public_key)?;
