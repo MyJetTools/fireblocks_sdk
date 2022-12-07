@@ -1,9 +1,6 @@
-mod api_client;
-mod auth;
-mod consts;
-mod co_signer;
-
-pub use api_client::*;
-pub use auth::*;
-pub use consts::*;
-pub use co_signer::*;
+#[cfg(feature = "api-client")]
+pub mod api_client;
+#[cfg(feature = "co-signer")]
+pub mod co_signer;
+#[cfg(feature = "callbacks")]
+pub mod callbacks;
