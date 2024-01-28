@@ -1,11 +1,11 @@
-use std::{str};
 use std::fmt;
+use std::str;
 
-
+use flurl::FlUrlError;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize)]
-pub enum FireblocksError{
+pub enum FireblocksError {
     GetVaultAccountsInvalidParams(i32, String),
     GetVaultAccountsUnexpectedError(i32, String),
     PostVaultAccountsInvalidParams(i32, String),
@@ -147,6 +147,12 @@ pub enum FireblocksError{
     ResponseSerializeError(String, String),
 }
 
+impl From<FlUrlError> for FireblocksError {
+    fn from(value: FlUrlError) -> Self {
+        Self::NetworkError(format!("{:?}", value))
+    }
+}
+
 impl fmt::Display for FireblocksError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "Fireblocks error. Error: {:?}", self)
@@ -154,8 +160,9 @@ impl fmt::Display for FireblocksError {
 }
 
 impl FireblocksError {
-    pub fn serialize_error(body: Vec<u8>) -> FireblocksError{
-        let result: Result<FireblocksErrorResponse, serde_json::Error> = serde_json::from_slice(&body[..]);
+    pub fn serialize_error(body: Vec<u8>) -> FireblocksError {
+        let result: Result<FireblocksErrorResponse, serde_json::Error> =
+            serde_json::from_slice(&body[..]);
         let result = result.unwrap();
 
         match &result.code {
@@ -169,9 +176,15 @@ impl FireblocksError {
             1007 => FireblocksError::GetVaultAssetFailedUnexpectedError(1007, result.message),
             1008 => FireblocksError::CreateVaultAssetFailedInvalidParams(1008, result.message),
             1009 => FireblocksError::CreateVaultAssetFailedUnexpectedError(1009, result.message),
-            1010 => FireblocksError::CreateVaultAssetAddressFailedInvalidParams(1010, result.message),
-            1011 => FireblocksError::CreateVaultAssetAddressFailedUnexpectedError(1011, result.message),
-            1012 => FireblocksError::GetVaultAssetAddressFailedUnexpectedError(1012, result.message),
+            1010 => {
+                FireblocksError::CreateVaultAssetAddressFailedInvalidParams(1010, result.message)
+            }
+            1011 => {
+                FireblocksError::CreateVaultAssetAddressFailedUnexpectedError(1011, result.message)
+            }
+            1012 => {
+                FireblocksError::GetVaultAssetAddressFailedUnexpectedError(1012, result.message)
+            }
             1013 => FireblocksError::PutVaultAccountsInvalidParams(1013, result.message),
             1014 => FireblocksError::PutVaultAccountsUnexpectedError(1014, result.message),
             1015 => FireblocksError::PutAddressIdInvalidParams(1015, result.message),
@@ -191,7 +204,9 @@ impl FireblocksError {
             1031 => FireblocksError::GetVaultAssetsBlanceInvalidParameters(1031, result.message),
             1032 => FireblocksError::GetVaultAssetsBlanceNotFoundError(1032, result.message),
             1033 => FireblocksError::GetVaultAssetsBlanceUnexpectedError(1033, result.message),
-            1034 => FireblocksError::CreateVaultAssetFailedInvalidAssetTestnet(1034, result.message),
+            1034 => {
+                FireblocksError::CreateVaultAssetFailedInvalidAssetTestnet(1034, result.message)
+            }
             1101 => FireblocksError::GetExchangeAccountsUnexpectedError(1101, result.message),
             1102 => FireblocksError::GetExchangeAccountByIdUnexpectedError(1102, result.message),
             1103 => FireblocksError::GetExchangeAccountByIdNotFound(1103, result.message),
@@ -211,9 +226,13 @@ impl FireblocksError {
             1210 => FireblocksError::GetInternalWalletAssetUnexpectedError(1210, result.message),
             1211 => FireblocksError::DeleteInternalWalletAssetInvalidParams(1211, result.message),
             1212 => FireblocksError::DeleteInternalWalletAssetUnexpectedError(1212, result.message),
-            1213 => FireblocksError::CreateInternalWalletAssetUnsupportedError(1213, result.message),
+            1213 => {
+                FireblocksError::CreateInternalWalletAssetUnsupportedError(1213, result.message)
+            }
             1214 => FireblocksError::CreateInternalWalletAssetNotAllowedError(1214, result.message),
-            1215 => FireblocksError::CreateInternalWalletAssetAlreadyExistsError(1215, result.message),
+            1215 => {
+                FireblocksError::CreateInternalWalletAssetAlreadyExistsError(1215, result.message)
+            }
             1216 => FireblocksError::CreateInternalWalletAsssetInvalidAddress(1216, result.message),
             1301 => FireblocksError::GetExternalWalletsUnexpectedError(1301, result.message),
             1302 => FireblocksError::CreateExternalWalletError(1302, result.message),
@@ -227,9 +246,13 @@ impl FireblocksError {
             1310 => FireblocksError::GetExternalWalletAssetUnexpectedError(1310, result.message),
             1311 => FireblocksError::DeleteExternalWalletAssetInvalidParams(1311, result.message),
             1312 => FireblocksError::DeleteExternalWalletAssetUnexpectedError(1312, result.message),
-            1313 => FireblocksError::CreateExternalWalletAssetUnsupportedError(1313, result.message),
+            1313 => {
+                FireblocksError::CreateExternalWalletAssetUnsupportedError(1313, result.message)
+            }
             1314 => FireblocksError::CreateExternalWalletAssetNotAllowedError(1314, result.message),
-            1315 => FireblocksError::CreateExternalWalletAssetAlreadyExistsError(1315, result.message),
+            1315 => {
+                FireblocksError::CreateExternalWalletAssetAlreadyExistsError(1315, result.message)
+            }
             1316 => FireblocksError::CreateExternalWalletAssetInvalidAddress(1316, result.message),
             1401 => FireblocksError::CreateTransactionUnsupportedAction(1401, result.message),
             1402 => FireblocksError::CreateTransactionSourceBalance(1402, result.message),
@@ -239,13 +262,22 @@ impl FireblocksError {
             1406 => FireblocksError::CancelTransactionFailed(1406, result.message),
             1408 => FireblocksError::GetTransactionInvalidParams(1408, result.message),
             1409 => FireblocksError::CreateTransactionInvalidParams(1409, result.message),
-            1410 => FireblocksError::CreateTransactionUnmanagedWalletContainerNotFound(1410, result.message),
+            1410 => FireblocksError::CreateTransactionUnmanagedWalletContainerNotFound(
+                1410,
+                result.message,
+            ),
             1411 => FireblocksError::CreateTransactionUnmanagedWalletNotFound(1411, result.message),
-            1412 => FireblocksError::CreateTransactionUnmanagedWalletSuspended(1412, result.message),
-            1421 => FireblocksError::SetConfirmationThresholdFailedTransactions(1421, result.message),
+            1412 => {
+                FireblocksError::CreateTransactionUnmanagedWalletSuspended(1412, result.message)
+            }
+            1421 => {
+                FireblocksError::SetConfirmationThresholdFailedTransactions(1421, result.message)
+            }
             1422 => FireblocksError::SetConfirmationThresholdFailedTxHash(1422, result.message),
             1423 => FireblocksError::GetTransactionsByTxhashNotFound(1423, result.message),
-            1424 => FireblocksError::CreateTransactionDestinationRippleInvalid(1424, result.message),
+            1424 => {
+                FireblocksError::CreateTransactionDestinationRippleInvalid(1424, result.message)
+            }
             1425 => FireblocksError::CreateTransactionRippleMissingTag(1425, result.message),
             1426 => FireblocksError::UnfreezeTransactionFailed(1426, result.message),
             1427 => FireblocksError::CreateTransactionSourceError(1427, result.message),
@@ -295,13 +327,13 @@ impl FireblocksError {
             9002 => FireblocksError::AccessDeniedForIp(9002, result.message),
             9003 => FireblocksError::IdempotencyKeyInvalid(9003, result.message),
             9005 => FireblocksError::IdempotencyKeyInProgress(9005, result.message),
-            _ => FireblocksError::Unexpected(result.message)
+            _ => FireblocksError::Unexpected(result.message),
         }
     }
 }
 
 #[derive(Debug, Deserialize, Serialize)]
-struct FireblocksErrorResponse{
+struct FireblocksErrorResponse {
     pub message: String,
-    pub code: i32
+    pub code: i32,
 }
