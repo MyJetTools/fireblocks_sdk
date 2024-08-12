@@ -12,14 +12,14 @@ callbacks = []
 api-client = []
 
 [dependencies]
-flurl = { tag = "0.5.0", git = "https://github.com/MyJetTools/fl-url" }
+flurl = { tag = "0.5.3", git = "https://github.com/MyJetTools/fl-url" }
 tokio = { version = "*", features = ["full"] }
 jsonwebtoken = "*"
-serde = { version = "1.0", features = ["derive"] }
-uuid = { version = "1.1.2", features = ["v4"] }
+serde = { version = "*", features = ["derive"] }
+uuid = { version = "*", features = ["v4"] }
 sha2 = "*"
 hex = "*"
 hmac = "*"
 async-trait = "*"
 hyper-tls = "*"
-serde_json = "1.0.60"
+serde_json = "*"
